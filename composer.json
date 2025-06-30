@@ -1,0 +1,21 @@
+{
+  "name": "vendor_name/framework.loc",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "mit",
+  "authors": [
+    {
+      "name": "dmaberlin",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PHPFramework\\": "core/",
+      "App\\": "app/"
+    }
+  },
+  "version": "1.0.0",
+  "require": {
+  }
+}

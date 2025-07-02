@@ -1,20 +1,40 @@
 <?php
 
+
+
 if(PHP_MAJOR_VERSION<8){
     die("Require PHP version >=8");
 }
 
 require_once __DIR__.'/../config/init.php';
-require_once CORE.'/Test.php';
+require_once ROOT.'/vendor/autoload.php';
 
-new \core\Test();
+$app = new \PHPFramework\Application();
+require_once CONFIG.'/routes.php';
+dump($app->router->getRoutes());
+$app->run();
+
+//$app->router->getRoutes();
+//dump($app->router->getRoutes());
+//
+//echo call_user_func($app->router->getRoutes()['GET']['/']);
+//echo ' ';
+//echo call_user_func($app->router->getRoutes()['GET']['/about']);
+//echo ' ';
+//echo call_user_func($app->router->getRoutes()['POST']['/contact']);
+//dump($_SERVER);
 
 
-echo '<pre>';
-print_r(CONFIG);
-print_r("\n");
-print_r(APP);
-echo '</pre>';
+//new Test();
+//print_r("\n");
+//new \App\Controllers\Test();
+//
+
+//echo '<pre>';
+//print_r(CONFIG);
+//print_r("\n");
+//print_r(APP);
+//echo '</pre>';
 
 
 //echo '<pre>';

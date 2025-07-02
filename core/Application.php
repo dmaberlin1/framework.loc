@@ -12,7 +12,7 @@ class Application
 
     public function __construct()
     {
-        //     dump($_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI'],$_GET);
+//             dump($_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI'],$_GET);
         $this->uri = ltrim($_SERVER['QUERY_STRING'], 'q=');
 
         $this->request = new \PHPFramework\Request($this->uri);
@@ -23,9 +23,9 @@ class Application
         //    $_SERVER['QUERY_STRING'] ==  "q=posts&page=3"
     }
 
-    public function run()
+    public function run():void
     {
-        $this->router->dispatch();
+       echo $this->router->dispatch();
     }
 
 }

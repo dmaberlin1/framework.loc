@@ -25,7 +25,7 @@ class Router
 
     public function get($path, $callback): void
     {
-        $path=trim($path,'/');
+        $path = trim($path, '/');
         $this->routes['GET']["/{$path}"] = $callback;
     }
 
@@ -33,12 +33,20 @@ class Router
     {
         $this->routes['POST'][$path] = $callback;
     }
-    public function dispatch()
+
+    public function dispatch():mixed
     {
-        $path=$this->request->getPath();
-        $method=$this->request->getMethod();
-        $callback=$this->routes[$method]["/{$path}"];
-        dump($path,$method,$callback);
+        $path = $this->request->getPath();
+        dump($path);
+        $method = $this->request->getMethod();
+        $callback = $this->routes[$method]["/{$path}"] ?? false;
+
+        //        dump($path,$method,$callback);
+        if ($callback === false) {
+            $this->response->setResponseCode(404);
+            return 'Page not found';
+        }
+        return call_user_func($callback);
 
     }
 

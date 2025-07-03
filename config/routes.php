@@ -8,10 +8,13 @@ use PHPFramework\Application;
  */
 
 $app->router->get('/',function (){
-    return 'Main page';
+//    return view('main');
+    return view()->render('main');
+
 });
 $app->router->get('/about',function (){
-    return 'About page';
+    return view('about');
 });
-$app->router->get('/contact',[ContactController::class,'index']);
-$app->router->post('/contact',[ContactController::class,'send']);
+router()->get('/contact',[ContactController::class,'index']);
+router()->post('/contact',[ContactController::class,'send']);
+//$app->router->post('/contact',[ContactController::class,'send']);

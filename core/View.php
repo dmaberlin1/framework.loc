@@ -13,13 +13,18 @@ class View
         $this->layout=$layout;
     }
 
-    public function render($view,$data=[],$layout='')
+    public function render($view,$data=[],$layout=''):string
     {
+        extract($data);
         $view_file=VIEWS."/{$view}.php";
         if (is_file($view_file)){
+            ob_start();
             require $view_file;
+            return ob_get_clean();
         }else{
-            return "Not found view {$view_file}";
+//            app()->response->setResponseCode(400);
+            response(500);
+            return view('Errors/500');
         }
     }
 }

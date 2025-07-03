@@ -8,8 +8,6 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Contact form page</h1>
-<?= $title; ?>
-<?= $name; ?>
+<h1>Main page</h1>
 </body>
 </html>

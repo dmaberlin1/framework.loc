@@ -37,14 +37,13 @@ class Router
     public function dispatch():mixed
     {
         $path = $this->request->getPath();
-//        dump($path);
         $method = $this->request->getMethod();
         $callback = $this->routes[$method]["/{$path}"] ?? false;
 
         //        dump($path,$method,$callback);
         if ($callback === false) {
             $this->response->setResponseCode(404);
-            return 'Page not found';
+            return view('Errors/404');
         }
 //        первый вариант
 //        if(is_array($callback)){

@@ -9,15 +9,19 @@ class Application
     public Request $request;
     public Response $response;
     public Router $router;
+    public View $view;
+    public static Application $app;
 
     public function __construct()
     {
 //             dump($_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI'],$_GET);
+        self::$app=$this;
         $this->uri = ltrim($_SERVER['QUERY_STRING'], 'q=');
 
         $this->request = new \PHPFramework\Request($this->uri);
         $this->response = new \PHPFramework\Response();
         $this->router = new \PHPFramework\Router($this->request, $this->response);
+        $this->view=new View(LAYOUT);
 
         //        dump($this->uri);
         //    $_SERVER['QUERY_STRING'] ==  "q=posts&page=3"

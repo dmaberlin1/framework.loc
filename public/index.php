@@ -10,12 +10,17 @@ require_once ROOT . '/vendor/autoload.php';
 
 $app = new \PHPFramework\Application();
 require_once CONFIG . '/routes.php';
-//dump($app->router->getRoutes());
+require_once HELPERS.'/helpers.php';
+//dd(\PHPFramework\Application::$app);
+dd(app());
+$app->run();
+
+
+
+dump($app->router->getRoutes());
 //dump($app->request->get('page'));
 //dump($app->request->get('s'));
 //dump($app->request->get('s1','abs'));
-$app->run();
-
 //$app->router->getRoutes();
 //dump($app->router->getRoutes());
 //

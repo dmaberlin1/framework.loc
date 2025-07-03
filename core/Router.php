@@ -34,7 +34,7 @@ class Router
         $this->routes['POST'][$path] = $callback;
     }
 
-    public function dispatch():mixed
+    public function dispatch(): mixed
     {
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
@@ -42,21 +42,21 @@ class Router
 
         //        dump($path,$method,$callback);
         if ($callback === false) {
-            $this->response->setResponseCode(404);
+            response(404);
             return view('Errors/404');
         }
-//        первый вариант
-//        if(is_array($callback)){
-//            в 0 индексе создаём екземпляр класса
-//            $object=new $callback[0];
-//            $action=$callback[1];
-//            return $object->$action();
-//        }
+        //        первый вариант
+        //        if(is_array($callback)){
+        //            в 0 индексе создаём екземпляр класса
+        //            $object=new $callback[0];
+        //            $action=$callback[1];
+        //            return $object->$action();
+        //        }
 
-        if(is_array($callback)){
-            $callback[0]=new $callback[0];
+        if (is_array($callback)) {
+            $callback[0] = new $callback[0];
         }
-//        var_dump($callback);
+        //        var_dump($callback);
         return call_user_func($callback);
 
     }

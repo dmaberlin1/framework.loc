@@ -1,11 +1,13 @@
 <?php
 
 
+use PHPFramework\Application;
+use PHPFramework\Router;
 use PHPFramework\View;
 
-function app(): \PHPFramework\Application
+function app(): Application
 {
-    return \PHPFramework\Application::$app;
+    return Application::$app;
 }
 
 function view($view = '', $data = [], $layout = ''): string|View
@@ -18,10 +20,10 @@ function view($view = '', $data = [], $layout = ''): string|View
 
 function response($code=200)
 {
-     app()->response->setResponseCode($code);
+    app()->response->setResponseCode($code);
 }
 
-function router(): \PHPFramework\Router
+function router(): Router
 {
     return app()->router;
 }

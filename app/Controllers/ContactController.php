@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
-use PHPFramework\Application;
 use PHPFramework\Controller;
 use PHPFramework\View;
 
 class ContactController extends Controller
 {
-    public function index(): View|string
+    public function index()
     {
 
         //        return 'Contact form GET page';

@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 use App\Controllers\ContactController;
 use PHPFramework\Application;
 
@@ -8,8 +11,9 @@ use PHPFramework\Application;
  */
 
 $app->router->get('/',function (){
-//    return view('main');
-    return view()->render('main');
+    return view('main');
+//    return 'main page';
+//    return view()->render('main');
 
 });
 $app->router->get('/about',function (){

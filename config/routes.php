@@ -11,7 +11,7 @@ use PHPFramework\Application;
  */
 
 $app->router->get('/',function (){
-    return view('main');
+    return view('main',['title'=>'Main page'],);
 //    return 'main page';
 //    return view()->render('main');
 

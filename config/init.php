@@ -8,3 +8,4 @@ const HELPERS=ROOT.'/helpers';
 const CONFIG=ROOT.'/config';
 const VIEWS=APP.'/Views';
 const LAYOUT ='default';
+const PATH='http://localhost/framework.loc';

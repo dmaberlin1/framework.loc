@@ -42,7 +42,7 @@ class Router
 
         //        dump($path,$method,$callback);
         if ($callback === false) {
-            response(404);
+            responseCode(404);
             return view('Errors/404');
         }
         //        первый вариант

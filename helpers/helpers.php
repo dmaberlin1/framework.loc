@@ -18,7 +18,7 @@ function view($view = '', $data = [], $layout = ''): string|View
     return app()->view;
 }
 
-function response($code=200)
+function responseCode($code = 200)
 {
     app()->response->setResponseCode($code);
 }
@@ -26,4 +26,53 @@ function response($code=200)
 function router(): Router
 {
     return app()->router;
+}
+
+function request(): \PHPFramework\Request
+{
+    return app()->request;
+}
+
+function response(): \PHPFramework\Response
+{
+    return app()->response;
+}
+
+
+function base_url($path = ''): string
+{
+    return PATH . $path;
+}
+
+function h($str): string
+{
+    return htmlspecialchars($str, ENT_QUOTES);
+}
+
+function old($fieldname): string
+{
+    $post_fieldname = $_POST[$fieldname];
+    return isset($post_fieldname) ? h($post_fieldname) : '';
+}
+
+function get_errors($fieldname, $errors = []): string
+{
+    $output = '';
+    if (isset($errors[$fieldname])) {
+        $output .= '<div class="invalid-feedback d-block"><ul class="list-unstyled">';
+        foreach ($errors[$fieldname] as $error) {
+            $output .= "<li>{$error}</li>";
+        }
+        $output .= '</ul></div>';
+    }
+    var_dump($output);
+    return $output;
+}
+
+function get_validation_class($fieldname, $errors = []):string
+{
+if(empty($errors)){
+    return '';
+}
+return isset($errors[$fieldname]) ? 'is-invalid' :'is-valid';
 }

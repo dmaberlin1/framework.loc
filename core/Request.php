@@ -25,21 +25,52 @@ class Request
         return strtoupper($_SERVER['REQUEST_METHOD']);
     }
 
+    public function isGet(): bool
+    {
+        return $this->getMethod() == 'GET';
+    }
+
+    public function isPost(): bool
+    {
+        return $this->getMethod() == 'POST';
+
+    }
+
+    public function isDelete(): bool
+    {
+        return $this->getMethod() == 'DELETE';
+    }
+
     public function removeQueryString(): string
     {
         if ($this->uri) {
-            $params=explode('&',$this->uri);
-            if(!str_contains($params[0], '=')){
-                return trim($params[0],'/');
+            $params = explode('&', $this->uri);
+            if (!str_contains($params[0], '=')) {
+                return trim($params[0], '/');
             }
-//            dump($params);
+            //            dump($params);
         }
         return '';
     }
 
-    public function get($name,$default=null):?string
+    public function get($name, $default = null): ?string
     {
-        return $_GET[$name]??$default;
+        return $_GET[$name] ?? $default;
+    }
+
+    public function post($name, $default = null): ?string
+    {
+        return $_POST[$name] ?? $default;
+    }
+
+    public function getData(): array
+    {
+        $data = [];
+        $request_data = $this->isGet() ? $_GET : $_POST;
+        foreach ($request_data as $k =>$v){
+            $data[$k]=trim($v,' ');
+        }
+        return $data;
     }
 
 }

@@ -24,7 +24,7 @@ class View
             $this->content = ob_get_clean();
         } else {
             //            app()->response->setResponseCode(400);
-            response(500);
+            responseCode(500);
             return view('Errors/500',['error'=>"Not found view {$view_file}"],false);
         }
         //        if (!$layout)
@@ -43,7 +43,7 @@ class View
             return ob_get_clean();
         } else {
             //            app()->response->setResponseCode(400);
-            response(500);
+            responseCode(500);
             return view('Errors/500',['error'=>"Not found layout {$layout_file}"],false);
         }
 

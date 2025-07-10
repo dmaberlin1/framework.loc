@@ -42,16 +42,8 @@ class Router
 
         //        dump($path,$method,$callback);
         if ($callback === false) {
-            responseCode(404);
-            return view('Errors/404');
+            abort();
         }
-        //        первый вариант
-        //        if(is_array($callback)){
-        //            в 0 индексе создаём екземпляр класса
-        //            $object=new $callback[0];
-        //            $action=$callback[1];
-        //            return $object->$action();
-        //        }
 
         if (is_array($callback)) {
             $callback[0] = new $callback[0];

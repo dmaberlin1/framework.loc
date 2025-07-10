@@ -9,3 +9,15 @@ const CONFIG=ROOT.'/config';
 const VIEWS=APP.'/Views';
 const LAYOUT ='default';
 const PATH='http://localhost/framework.loc';
+
+const DB=[
+    'host'=>'localhost',
+    'dbname'=>'fr_loc',
+    'username'=>'root',
+    'password'=>'root',
+    'charset'=>'utf8mb4',
+    'options'=>[
+      PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC
+    ],
+];

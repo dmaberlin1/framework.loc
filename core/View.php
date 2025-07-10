@@ -13,7 +13,7 @@ class View
         $this->layout = $layout;
     }
 
-    public function render($view, $data = [], $layout = ''):string
+    public function render($view, $data = [], $layout = '')
     {
         extract($data, EXTR_SKIP);
         $view_file = VIEWS . "/{$view}.php";
@@ -23,9 +23,7 @@ class View
             require $view_file;
             $this->content = ob_get_clean();
         } else {
-            //            app()->response->setResponseCode(400);
-            responseCode(500);
-            return view('Errors/500',['error'=>"Not found view {$view_file}"],false);
+            abort('Errors/500', "Not found view {$view_file}");
         }
         //        if (!$layout)
         //            Сработает при любом "пустом" значении:  false, '', null, 0, '0', []
@@ -42,11 +40,9 @@ class View
             require_once $layout_file;
             return ob_get_clean();
         } else {
-            //            app()->response->setResponseCode(400);
-            responseCode(500);
-            return view('Errors/500',['error'=>"Not found layout {$layout_file}"],false);
+            abort('Errors/500',  "Not found layout {$view_file}");
         }
-
+        return '';
 
     }
 }

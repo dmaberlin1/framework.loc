@@ -76,3 +76,10 @@ if(empty($errors)){
 }
 return isset($errors[$fieldname]) ? 'is-invalid' :'is-valid';
 }
+
+function abort($code=404,$error='')
+{
+    responseCode($code);
+    echo \view("Errors/{$code}",['error'=>$error],false);
+    die;
+}

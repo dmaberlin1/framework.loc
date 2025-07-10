@@ -11,14 +11,15 @@ abstract class Model
     //    поля
     public array $attributes = [];
     public array $rules = [];
+    public array $labels = [];
 
     protected array $errors = [];
     protected array $rules_list = ['required', 'min', 'max', 'email'];
     protected array $messages = [
-        'required' => 'The :fieldname: field is required',
-        'min' => 'The :fieldname: field must be a minimum :rulevalue: characters',
-        'max' => 'The :fieldname: field must be a maximum :rulevalue: characters',
-        'email' => 'The :fieldname: field must be email, example: example@example.example',
+        'required' => ':fieldname: field is required',
+        'min' => ':fieldname: field must be a minimum :rulevalue: characters',
+        'max' => ':fieldname: field must be a maximum :rulevalue: characters',
+        'email' => ':fieldname: field must be email, example: example@example.example',
     ];
 
     public function loadData(): void
@@ -35,8 +36,6 @@ abstract class Model
 
     public function validate(): bool
     {
-        //        dump($this->attributes);
-        //        dump($this->rules);
         foreach ($this->attributes as $fieldName => $fieldValue) {
             if (isset($this->rules[$fieldName])) {
                 $this->check([
@@ -54,18 +53,16 @@ abstract class Model
         foreach ($field['rules'] as $ruleValidator => $ruleValidator_value) {
 
             if (in_array($ruleValidator, $this->rules_list, true)) {
-                //                            var_dump($field['fieldname'],$ruleValidator,$ruleValidator_value);
                 //будет вызываться метод под именем ['required', 'min', 'max', 'email'];
                 if (!call_user_func_array([$this, $ruleValidator], [$field['value'], $ruleValidator_value])) {
-                    //                    var_dump("Error: {$field['fieldname']} - {$ruleValidator} ");
+
                     $this->addError(
                         $field['fieldname'],
                         str_replace(
                             [':fieldname:', ':rulevalue:'],
-                            [$field['fieldname'], $ruleValidator_value],
+                            [$this->labels[$field['fieldname']] ?? $field['fieldname'], $ruleValidator_value],
                             $this->messages[$ruleValidator]
                         )
-
                     );
                 }
 
@@ -80,7 +77,6 @@ abstract class Model
 
     public function getErrors(): array
     {
-        dump($this->errors);
         return $this->errors;
     }
 

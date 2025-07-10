@@ -14,5 +14,11 @@ class Contact extends Model
         'email' => ['email' => true, 'min' => 5, 'max' => 50],
         'content' => ['required' => true, 'min' => 5, 'max' => 200],
     ];
+    public array $labels=[
+        'name' => 'Name',
+        'email' => 'E-mail',
+        'content'=>'Content',
+    ];
+
 
 }

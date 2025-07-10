@@ -6,7 +6,7 @@ use App\Models\Contact;
 use PHPFramework\Controller;
 use PHPFramework\View;
 
-class ContactController extends Controller
+class ContactController extends BaseController
 {
 
 

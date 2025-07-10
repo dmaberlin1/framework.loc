@@ -10,6 +10,7 @@ class Application
     public Response $response;
     public Router $router;
     public View $view;
+    public Database $db;
     public static Application $app;
 
     public function __construct()
@@ -22,6 +23,7 @@ class Application
         $this->response = new \PHPFramework\Response();
         $this->router = new \PHPFramework\Router($this->request, $this->response);
         $this->view=new View(LAYOUT);
+        $this->db=new Database();
 
         //        dump($this->uri);
         //    $_SERVER['QUERY_STRING'] ==  "q=posts&page=3"

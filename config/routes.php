@@ -4,18 +4,14 @@
 
 
 use App\Controllers\ContactController;
+use App\Controllers\HomeController;
 use PHPFramework\Application;
 
 /**
  * @var Application $app
  */
 
-$app->router->get('/',function (){
-    return view('main',['title'=>'Main page'],);
-//    return 'main page';
-//    return view()->render('main');
-
-});
+$app->router->get('/',[HomeController::class,'index']);
 $app->router->get('/about',function (){
     return view('about');
 });

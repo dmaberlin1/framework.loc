@@ -1,0 +1,19 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Page not found</title>
+    <link rel="icon" href="<?= base_url();?>/images/framework.png">
+
+</head>
+<body>
+<div class="container">
+    <h2 style="font-style: italic;color: #ce64e6"><span>403</span>  запрещен доступ к странице, файлу или папке, URL</h2>
+</div>
+
+</body>
+</html>

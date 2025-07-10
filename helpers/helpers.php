@@ -69,17 +69,27 @@ function get_errors($fieldname, $errors = []): string
     return $output;
 }
 
-function get_validation_class($fieldname, $errors = []):string
+function get_validation_class($fieldname, $errors = []): string
 {
-if(empty($errors)){
-    return '';
-}
-return isset($errors[$fieldname]) ? 'is-invalid' :'is-valid';
+    if (empty($errors)) {
+        return '';
+    }
+    return isset($errors[$fieldname]) ? 'is-invalid' : 'is-valid';
 }
 
-function abort($code=404,$error='')
+function abort($error = '',$code = 404)
 {
     responseCode($code);
-    echo \view("Errors/{$code}",['error'=>$error],false);
+    $notFound = 404;
+    if(DEBUG || $code== $notFound){
+        dump(view("Errors/{$code}", ['error' => $error], false));
+        dump("error: ",$error);
+        echo view("Errors/{$code}", ['error' => $error], false);
+    }
     die;
+}
+
+function db(): \PHPFramework\Database
+{
+    return app()->db;
 }

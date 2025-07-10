@@ -23,7 +23,7 @@ class View
             require $view_file;
             $this->content = ob_get_clean();
         } else {
-            abort('Errors/500', "Not found view {$view_file}");
+            abort( "Not found view {$view_file}",500);
         }
         //        if (!$layout)
         //            Сработает при любом "пустом" значении:  false, '', null, 0, '0', []
@@ -40,7 +40,7 @@ class View
             require_once $layout_file;
             return ob_get_clean();
         } else {
-            abort('Errors/500',  "Not found layout {$view_file}");
+            abort( "Not found layout {$view_file}",404);
         }
         return '';
 

@@ -4,6 +4,8 @@ namespace PHPFramework;
 
 abstract class Model
 {
+
+    public readonly string $table;
     //    разрешенные для записи поля
     public array $fillable = [];
     //    public array $fillable = ['email', 'content'];
@@ -21,6 +23,35 @@ abstract class Model
         'max' => ':fieldname: field must be a maximum :rulevalue: characters',
         'email' => ':fieldname: field must be email, example: example@example.example',
     ];
+
+    public function __construct()
+    {
+        $this->table = static::tableName();
+    }
+
+    abstract protected static function tableName(): string;
+
+    public function save():false|string
+    {
+        // insert into table(`title`,`content`) values(:title,:content)
+        //        fields
+        $field_keys = array_keys($this->attributes);
+        $fields = array_map(fn($field) => "`{$field}`", $field_keys);
+        $fields = implode(',', $fields);
+        dump($fields);
+
+        //        values
+        $values_placeholders = array_map(fn($value) => ":{$value}", $field_keys);
+        $values_placeholders = implode(',', $values_placeholders);
+        $query = "INSERT INTO {$this->table} ($fields) VALUES ($values_placeholders)";
+        db()->query($query, $this->attributes);
+        return db()->getInsertId();
+        //        dump($query);
+        //        dump($values_placeholders);
+        //        dump($this->table);
+        //        dump($this->attributes);
+
+    }
 
     public function loadData(): void
     {

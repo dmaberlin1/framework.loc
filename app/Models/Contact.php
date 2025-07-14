@@ -21,4 +21,8 @@ class Contact extends Model
     ];
 
 
+    protected static function tableName(): string
+    {
+        return 'contacts';
+    }
 }

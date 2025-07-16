@@ -10,6 +10,8 @@ class HomeController extends BaseController
     public function index()
     {
 //        dump(db());
+        session()->set('name','Tom');
+
         $title = 'main page';
 //        $posts = db()->query("SELECT * FROM posts where id >?",[2])->get();
         $table = 'posts';
@@ -17,7 +19,7 @@ class HomeController extends BaseController
 //        $post=db()->findById($table,1);
 //        $postFail=db()->findByIdOrFail($table,5);
 //        dump($posts[0]['content']);
-        dump($posts);
+//        dump($posts);
 //        dump($post);
 //        dump($postFail);
         return view('main',['title'=> $title,'posts'=>$posts]);

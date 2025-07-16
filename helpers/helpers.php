@@ -3,6 +3,7 @@
 
 use PHPFramework\Application;
 use PHPFramework\Router;
+use PHPFramework\Session;
 use PHPFramework\View;
 
 function app(): Application
@@ -77,13 +78,13 @@ function get_validation_class($fieldname, $errors = []): string
     return isset($errors[$fieldname]) ? 'is-invalid' : 'is-valid';
 }
 
-function abort($error = '',$code = 404)
+function abort($error = '', $code = 404)
 {
     responseCode($code);
     $notFound = 404;
-    if(DEBUG || $code== $notFound){
+    if (DEBUG || $code == $notFound) {
         dump(view("Errors/{$code}", ['error' => $error], false));
-        dump("error: ",$error);
+        dump("error: ", $error);
         echo view("Errors/{$code}", ['error' => $error], false);
     }
     die;
@@ -92,4 +93,19 @@ function abort($error = '',$code = 404)
 function db(): \PHPFramework\Database
 {
     return app()->db;
+}
+
+function session(): Session
+{
+    return app()->session;
+}
+
+function get_alerts()
+{
+    if ($flash_success = \session()->getFlash('success')) {
+        \view()->renderPartial('Includes/alert_success',compact('flash_success'));
+    }
+    if ($flash_error = \session()->getFlash('error')) {
+        \view()->renderPartial('Includes/alert_error',compact('flash_error'));
+    }
 }

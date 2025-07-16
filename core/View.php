@@ -23,7 +23,7 @@ class View
             require $view_file;
             $this->content = ob_get_clean();
         } else {
-            abort( "Not found view {$view_file}",500);
+            abort("Not found view {$view_file}", 500);
         }
         //        if (!$layout)
         //            Сработает при любом "пустом" значении:  false, '', null, 0, '0', []
@@ -40,9 +40,19 @@ class View
             require_once $layout_file;
             return ob_get_clean();
         } else {
-            abort( "Not found layout {$view_file}",404);
+            abort("Not found layout {$view_file}", 404);
         }
         return '';
+    }
 
+    public function renderPartial($view, $data = [])
+    {
+        extract($data,EXTR_SKIP);
+        $view_file=VIEWS."/{$view}.php";
+        if(is_file($view_file)){
+            require $view_file;
+        }else{
+            echo "File {$view_file} not found";
+        }
     }
 }

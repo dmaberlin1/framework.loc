@@ -28,8 +28,14 @@ class PostController extends BaseController
         }
 //        dump($post);
         $id = $post->save();
-        dump($id);
-        return 'OK';
+
+        if($id=$post->save()){
+            session()->setFlash('success',"Post {$id} created");
+        }else{
+            session()->setFlash('error','Unknown errors');
+        }
+        response()->redirect('/framework.loc/posts/create');
+
 
     }
 }

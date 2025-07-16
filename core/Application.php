@@ -11,6 +11,7 @@ class Application
     public Router $router;
     public View $view;
     public Database $db;
+    public Session $session;
     public static Application $app;
 
     public function __construct()
@@ -19,14 +20,13 @@ class Application
         self::$app=$this;
         $this->uri = ltrim($_SERVER['QUERY_STRING'], 'q=');
 
-        $this->request = new \PHPFramework\Request($this->uri);
-        $this->response = new \PHPFramework\Response();
-        $this->router = new \PHPFramework\Router($this->request, $this->response);
+        $this->request = new Request($this->uri);
+        $this->response = new Response();
+        $this->router = new Router($this->request, $this->response);
         $this->view=new View(LAYOUT);
         $this->db=new Database();
+        $this->session = new Session();
 
-        //        dump($this->uri);
-        //    $_SERVER['QUERY_STRING'] ==  "q=posts&page=3"
     }
 
     public function run():void

@@ -117,6 +117,18 @@ abstract class Model
         return !empty($this->errors);
     }
 
+    public function listErrors():string
+    {
+        $output='<ul class="list-unstyled">';
+        foreach ($this->errors as $field_errors){
+            foreach ($field_errors as $error){
+                $output.="<li>{$error}</li>";
+            }
+        }
+        $output.='</ul>';
+        return $output;
+    }
+
     protected function required($value, $rule_value): bool
     {
         return (trim($value) == true);

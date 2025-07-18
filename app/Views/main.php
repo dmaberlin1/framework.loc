@@ -7,8 +7,12 @@
     <?php if (!empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
 
-            <h3><?= $post['title']?></h3>
-        <?php endforeach;?>
+            <h3>
+                <a href="<?= base_url("/posts/edit?id={$post['id']}") ?>">
+                    <?= $post['title'] ?>
+                </a>
+            </h3>
+        <?php endforeach; ?>
 
     <?php endif; ?>
 </div>

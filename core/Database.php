@@ -79,4 +79,9 @@ class Database
         return $this->connection->lastInsertId();
     }
 
+    public function rowCount():int
+    {
+        return $this->statement->rowCount();
+    }
+
 }

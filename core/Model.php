@@ -53,6 +53,26 @@ abstract class Model
 
     }
 
+    public function update()
+    {
+        // update table set `title`=:title,`content`=:content where `id`=:id
+        if(!isset($this->attributes['id'])){
+            return false;
+        }
+        $fields='';
+        foreach ($this->attributes as $k=>$v){
+            if($k=='id'){
+                continue;
+            }
+            $fields.="`{$k}`=:{$k},";
+        }
+        $fields=rtrim($fields,',');
+        $query="UPDATE {$this->table} SET {$fields} WHERE `id`=:id";
+        db()->query($query,$this->attributes);
+        dump($query);
+        return db()->rowCount();
+
+    }
     public function loadData(): void
     {
         $data = request()->getData();

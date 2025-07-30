@@ -100,21 +100,14 @@ function session(): Session
     return app()->session;
 }
 
+
 function get_alerts(): void
 {
     $flash = $_SESSION['flash'];
-    if(!empty($flash)){
-        foreach ($flash as $k=>$v){
-                    \view()->renderPartial("Includes/alert_{$k}", ["flash_{$k}" => \session()->getFlash($k)]);
+    if (!empty($flash)) {
+        foreach ($flash as $k => $v) {
+            \view()->renderPartial("Includes/alert_{$k}", ["flash_{$k}" => \session()->getFlash($k)]);
         }
     }
 
-
-    //    два варианта -выше вариант на расширение
-    //    if ($flash_success = \session()->getFlash('success')) {
-    //        \view()->renderPartial('Includes/alert_success', compact('flash_success'));
-    //    }
-    //    if ($flash_error = \session()->getFlash('error')) {
-    //        \view()->renderPartial('Includes/alert_error', compact('flash_error'));
-    //    }
 }

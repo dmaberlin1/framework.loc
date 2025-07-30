@@ -7,6 +7,7 @@ class Router
     public Request $request;
     public Response $response;
     protected array $routes = [];
+    public array $route_params = [];
 
     /**
      * @param Request $request
@@ -38,9 +39,8 @@ class Router
     {
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
-        $callback = $this->routes[$method]["/{$path}"] ?? false;
-
-        //        dump($path,$method,$callback);
+        $callback = $this->matchRoute($method, $path);
+//        dd($callback);
         if ($callback === false) {
             abort();
         }
@@ -51,6 +51,22 @@ class Router
         //        var_dump($callback);
         return call_user_func($callback);
 
+    }
+
+    protected function matchRoute($method, $path)
+    {
+        foreach ($this->routes[$method] as $pattern => $route) {
+            if (preg_match("#^{$pattern}$#", "/{$path}", $matches)) {
+                //                dump($matches);
+                foreach ($matches as $k => $v) {
+                    if (is_string($k)) {
+                        $this->route_params[$k] = $v;
+                    }
+                }
+                return $route;
+            }
+        }
+        return false;
     }
 
 }

@@ -53,6 +53,15 @@ class Database
     {
         return $this->statement->fetchAll();
     }
+    public function getOne(): array|false
+    {
+        return $this->statement->fetch();
+    }
+
+    public function findPostBySlug($slug)
+    {
+       return db()->query("SELECT * FROM posts WHERE slug =?",[$slug])->getOne();
+    }
 
     public function findAll($table): array|false
     {
@@ -70,6 +79,17 @@ class Database
         return $this->statement->fetch();
     }
 
+    public function getColumn():mixed
+    {
+        return $this->statement->fetchColumn();
+    }
+
+    public function findUnique($table,$field,$value)
+    {
+        $this->query("select * from {$table} where {$field} = ? limit 1", [$value]);
+        return $this->statement->fetch();
+
+    }
     public function findByIdOrFail($table, $id)
     {
         $result = $this->findById($table, $id);

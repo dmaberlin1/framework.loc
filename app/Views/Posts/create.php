@@ -15,6 +15,16 @@
                     <?= get_errors('title', $errors ?? []) ?>
                 </div>
 
+                <div class="mb-3">
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" name="slug"
+                           class="form-control <?= get_validation_class('slug', $errors ?? []) ?>" id="slug"
+                           value="<?= old('slug') ?>"
+                           placeholder="slug"
+                    >
+                    <?= get_errors('slug', $errors ?? []) ?>
+                </div>
+
 
                 <div class="mb-3">
                     <label for="content" class="form-label">content</label>

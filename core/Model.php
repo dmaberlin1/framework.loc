@@ -16,12 +16,13 @@ abstract class Model
     public array $labels = [];
 
     protected array $errors = [];
-    protected array $rules_list = ['required', 'min', 'max', 'email'];
+    protected array $rules_list = ['required', 'min', 'max', 'email','unique'];
     protected array $messages = [
         'required' => ':fieldname: field is required',
         'min' => ':fieldname: field must be a minimum :rulevalue: characters',
         'max' => ':fieldname: field must be a maximum :rulevalue: characters',
         'email' => ':fieldname: field must be email, example: example@example.example',
+        'unique'=>':fieldname: is already taken',
     ];
 
     public function __construct()
@@ -176,5 +177,16 @@ abstract class Model
         return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
+    protected function unique($value,$rule_value):bool
+    {
+        $data=explode(':',$rule_value);
+        $table=$data[0];
+        $field=$data[1];
+        
+        $result = db()->findUnique($table, $field, $value);
+        $boolResult= is_array($result);
+//        dd(!$boolResult);
+        return !$boolResult;
+    }
 
 }

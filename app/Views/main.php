@@ -8,7 +8,7 @@
         <?php foreach ($posts as $post): ?>
 
             <h3>
-                <a href="#">
+                <a href="posts/<?= $post['slug']?>">
                     <?= $post['title'] ?>
                 </a>
                  |

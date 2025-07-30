@@ -14,6 +14,18 @@ class PostController extends BaseController
         return view('Posts/edit', ['title' => 'Edit post', 'post' => $post]);
     }
 
+    public function show()
+    {
+        $slug=router()->route_params['slug'] ??'';
+        dump($slug);
+
+        $post=db()->findPostBySlug($slug);
+        if(!$post){
+            abort("Post by slug {$slug} not found");
+        }
+        return view('Posts/show',['title'=>'Show post','post'=>$post]);
+    }
+
     public function update()
     {
         $id = request()->post('id');

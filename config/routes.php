@@ -33,3 +33,5 @@ router()->post('/posts/update',[PostController::class,'update']);
 
 router()->get('/posts/delete',[PostController::class,'delete']);
 
+router()->get('/posts/(?P<slug>[a-z0-9-]+)',[PostController::class,'show']);
+

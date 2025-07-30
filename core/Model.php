@@ -31,7 +31,7 @@ abstract class Model
 
     abstract protected static function tableName(): string;
 
-    public function save():false|string
+    public function save(): false|string
     {
         // insert into table(`title`,`content`) values(:title,:content)
         //        fields
@@ -56,23 +56,30 @@ abstract class Model
     public function update()
     {
         // update table set `title`=:title,`content`=:content where `id`=:id
-        if(!isset($this->attributes['id'])){
+        if (!isset($this->attributes['id'])) {
             return false;
         }
-        $fields='';
-        foreach ($this->attributes as $k=>$v){
-            if($k=='id'){
+        $fields = '';
+        foreach ($this->attributes as $k => $v) {
+            if ($k == 'id') {
                 continue;
             }
-            $fields.="`{$k}`=:{$k},";
+            $fields .= "`{$k}`=:{$k},";
         }
-        $fields=rtrim($fields,',');
-        $query="UPDATE {$this->table} SET {$fields} WHERE `id`=:id";
-        db()->query($query,$this->attributes);
+        $fields = rtrim($fields, ',');
+        $query = "UPDATE {$this->table} SET {$fields} WHERE `id`=:id";
+        db()->query($query, $this->attributes);
         dump($query);
         return db()->rowCount();
 
     }
+
+    public function delete(int $id): int
+    {
+        db()->query("DELETE FROM {$this->table} WHERE id= ?",[$id]);
+        return db()->rowCount();
+    }
+
     public function loadData(): void
     {
         $data = request()->getData();
@@ -137,15 +144,15 @@ abstract class Model
         return !empty($this->errors);
     }
 
-    public function listErrors():string
+    public function listErrors(): string
     {
-        $output='<ul class="list-unstyled">';
-        foreach ($this->errors as $field_errors){
-            foreach ($field_errors as $error){
-                $output.="<li>{$error}</li>";
+        $output = '<ul class="list-unstyled">';
+        foreach ($this->errors as $field_errors) {
+            foreach ($field_errors as $error) {
+                $output .= "<li>{$error}</li>";
             }
         }
-        $output.='</ul>';
+        $output .= '</ul>';
         return $output;
     }
 

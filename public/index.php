@@ -3,6 +3,8 @@
 
 use PHPFramework\Application;
 
+$start_framework=microtime(true);
+
 if (PHP_MAJOR_VERSION < 8) {
     die("Require PHP version >=8");
 }
@@ -15,6 +17,11 @@ require_once HELPERS.'/helpers.php';
 $app = new Application();
 require_once CONFIG . '/routes.php';
 $app->run();
+
+if(DEBUG){
+    $runtime = microtime(true) - $start_framework;
+    dump("Time: ". $runtime);
+}
 
 
 //dd(\PHPFramework\Application::$app);

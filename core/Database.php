@@ -6,6 +6,7 @@ class Database
 {
     protected \PDO $connection;
     protected \PDOStatement $statement;
+    protected array $queries = [];
 
     public function __construct()
     {
@@ -33,6 +34,11 @@ class Database
         try {
             $this->statement = $this->connection->prepare($query);
             $this->statement->execute($params);
+            if (DEBUG) {
+                ob_start();
+                $this->statement->debugDumpParams();
+                $this->queries[] = ob_get_clean();
+            }
         } catch (\PDOException $e) {
             error_log(
                 "[" . date('Y-m-d H:i:s') . "] DB Error: {$e->getMessage()}" . PHP_EOL,
@@ -74,14 +80,32 @@ class Database
         return $result;
     }
 
-    public function getInsertId():false|string
+    public function getInsertId(): false|string
     {
         return $this->connection->lastInsertId();
     }
 
-    public function rowCount():int
+    public function rowCount(): int
     {
         return $this->statement->rowCount();
+    }
+
+    public function getQueries(): array
+    {
+        $res = [];
+        foreach ($this->queries as $k => $query) {
+
+            //            PHP_EOL = маркер конца строки в зависимости от ОСи
+            $line = strtok($query, PHP_EOL);
+            while ($line !== false) {
+                if(str_contains($line,'SQL:') || str_contains($line,'Sent SQL:')) {
+                    $res[$k][]=$line;
+                }
+                $line=strtok(PHP_EOL);
+            }
+        }
+
+        return $res;
     }
 
 }

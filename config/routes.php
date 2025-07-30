@@ -19,13 +19,17 @@ $app->router->get('/about',function (){
 });
 //contact
 router()->get('/contact',[ContactController::class,'index']);
+
 router()->post('/contact',[ContactController::class,'send']);
 
 //post
 router()->get('/posts/create',[PostController::class,'create']);
+
 router()->post('/posts/store',[PostController::class,'send']);
 
 router()->get('/posts/edit',[PostController::class,'edit']);
 
 router()->post('/posts/update',[PostController::class,'update']);
+
+router()->get('/posts/delete',[PostController::class,'delete']);
 

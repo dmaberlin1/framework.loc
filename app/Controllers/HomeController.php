@@ -17,7 +17,7 @@ class HomeController extends BaseController
         $table = 'posts';
         $posts = db()->findAll($table);
 //        $post=db()->findById($table,1);
-//        $postFail=db()->findByIdOrFail($table,5);
+        $postFail=db()->findByIdOrFail($table,2);
 //        dump($posts[0]['content']);
 //        dump($posts);
 //        dump($post);

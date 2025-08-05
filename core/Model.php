@@ -16,13 +16,15 @@ abstract class Model
     public array $labels = [];
 
     protected array $errors = [];
-    protected array $rules_list = ['required', 'min', 'max', 'email','unique'];
+    protected array $rules_list = ['required', 'min', 'max', 'email', 'unique', 'ext','size'];
     protected array $messages = [
         'required' => ':fieldname: field is required',
         'min' => ':fieldname: field must be a minimum :rulevalue: characters',
         'max' => ':fieldname: field must be a maximum :rulevalue: characters',
         'email' => ':fieldname: field must be email, example: example@example.example',
-        'unique'=>':fieldname: is already taken',
+        'unique' => ':fieldname: is already taken',
+        'ext'=>'File :fieldname: extension does not match. Allowed :rulevalue:',
+        'size'=>'File :fieldname: is too large. Allowed :rulevalue: bytes',
     ];
 
     public function __construct()
@@ -77,7 +79,7 @@ abstract class Model
 
     public function delete(int $id): int
     {
-        db()->query("DELETE FROM {$this->table} WHERE id= ?",[$id]);
+        db()->query("DELETE FROM {$this->table} WHERE id= ?", [$id]);
         return db()->rowCount();
     }
 
@@ -159,7 +161,15 @@ abstract class Model
 
     protected function required($value, $rule_value): bool
     {
-        return (trim($value) == true);
+        if(is_string($value)){
+            $value=trim($value);
+        }
+        if(is_array($value)){
+            if(empty($value['name'])){
+                return false;
+            }
+        }
+        return !empty($value);
     }
 
     protected function min($value, $rule_value): bool
@@ -177,16 +187,35 @@ abstract class Model
         return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
-    protected function unique($value,$rule_value):bool
+    protected function unique($value, $rule_value): bool
     {
-        $data=explode(':',$rule_value);
-        $table=$data[0];
-        $field=$data[1];
-        
+        $data = explode(':', $rule_value);
+        $table = $data[0];
+        $field = $data[1];
+
         $result = db()->findUnique($table, $field, $value);
-        $boolResult= is_array($result);
-//        dd(!$boolResult);
+        $boolResult = is_array($result);
+        //        dd(!$boolResult);
         return !$boolResult;
     }
 
+    protected function ext($value,$rule_value):bool
+    {
+        //валидация на это поле проходит в required
+        if(empty($value['name'])){
+            return true;
+        }
+
+        $file_ext = get_file_ext($value['name']);
+        $allowed_exts=explode('|',$rule_value);
+        return in_array($file_ext,$allowed_exts);
+    }
+
+    protected function size($value,$rule_value):bool
+    {
+        if(empty($value['size'])){
+            return true;
+        }
+        return $value['size']<=$rule_value;
+    }
 }

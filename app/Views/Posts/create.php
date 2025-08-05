@@ -4,7 +4,7 @@
 
         <div class="col-md-6 offset-md-3">
             <h1 style="margin-bottom: 5px">Contact form page</h1>
-            <form action="/framework.loc/posts/store" method="post">
+            <form action="/framework.loc/posts/store" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="title"
@@ -23,6 +23,15 @@
                            placeholder="slug"
                     >
                     <?= get_errors('slug', $errors ?? []) ?>
+                </div>
+
+                <div class="mb-3">
+                    <label for="thumbnail" class="form-label">thumbnail</label>
+                    <input type="file" name="thumbnail"
+                           class="form-control <?= get_validation_class('thumbnail', $errors ?? []) ?>"
+                           id="thumbnail"
+                    >
+                    <?= get_errors('thumbnail', $errors ?? []) ?>
                 </div>
 
 

@@ -25,7 +25,7 @@ router()->post('/contact',[ContactController::class,'send']);
 //post
 router()->get('/posts/create',[PostController::class,'create']);
 
-router()->post('/posts/store',[PostController::class,'send']);
+router()->post('/posts/store',[PostController::class,'store']);
 
 router()->get('/posts/edit',[PostController::class,'edit']);
 

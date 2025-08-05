@@ -16,24 +16,24 @@ class PostController extends BaseController
 
     public function show()
     {
-        $slug=router()->route_params['slug'] ??'';
+        $slug = router()->route_params['slug'] ?? '';
         dump($slug);
 
-        $post=db()->findPostBySlug($slug);
-        if(!$post){
+        $post = db()->findPostBySlug($slug);
+        if (!$post) {
             abort("Post by slug {$slug} not found");
         }
-        return view('Posts/show',['title'=>'Show post','post'=>$post]);
+        return view('Posts/show', ['title' => 'Show post', 'post' => $post]);
     }
 
     public function update()
     {
         $id = request()->post('id');
-        $post=db()->findByIdOrFail('posts',$id);
-//        if (!$post) {
-//            $this->setErrorFlashMessage('Not found POST');
-//            response()->redirect('/framework.loc');
-//        }
+        $post = db()->findByIdOrFail('posts', $id);
+        //        if (!$post) {
+        //            $this->setErrorFlashMessage('Not found POST');
+        //            response()->redirect('/framework.loc');
+        //        }
         if (!$id) {
             $this->setErrorFlashMessage('Not found id');
             response()->redirect('/framework.loc');
@@ -48,10 +48,10 @@ class PostController extends BaseController
             response()->redirect("/framework.loc/posts/edit?={$id}");
         }
         dump($post);
-        if ($post->update() !== false ) {
+        if ($post->update() !== false) {
             $this->setSuccessFlash($id);
             response()->redirect("/framework.loc/posts/edit?={$id}");
-        }else{
+        } else {
             $this->setErrorFlashMessage('Error updating..');
             response()->redirect("/framework.loc/");
         }
@@ -66,23 +66,30 @@ class PostController extends BaseController
         return view('Posts/create', ['title' => $title]);
     }
 
-    public function send()
+    public function store()
     {
         $post = new Post();
         $post->loadData();
+
+        $thumbnail = 'thumbnail';
+        if (isset($_FILES[$thumbnail])) {
+            $post->attributes[$thumbnail] = $_FILES[$thumbnail];
+        } else {
+            $post->attributes[$thumbnail] = [];
+        }
+
         if (!$post->validate()) {
             $title = 'Create post';
+
             dump($post->getErrors());
             return view('Posts/create', ['title' => $title]);
 
         }
-        //        dump($post);
-        $id = $post->save();
 
-        if ($id = $post->save()) {
+        if ($id = $post->savePost()) {
             $this->setSuccessFlash($id);
         } else {
-           $this->setErrorFlashMessage('Not found ID');
+            $this->setErrorFlashMessage('Not found ID');
         }
         response()->redirect('/framework.loc/posts/create');
 
@@ -91,13 +98,12 @@ class PostController extends BaseController
 
     public function delete()
     {
-        $id=request()->get('id');
-        db()->findByIdOrFail('posts',$id);
-        $post=new Post();
-        if($post->delete($id)){
+        $id = request()->get('id');
+        db()->findByIdOrFail('posts', $id);
+        $post = new Post();
+        if ($post->delete($id)) {
             $this->setSuccessDeletedFlash($id);
-        }
-        else{
+        } else {
             $this->setErrorFlashMessage('Deletion error');
         }
         response()->redirect('/framework.loc/');
@@ -113,6 +119,7 @@ class PostController extends BaseController
     {
         session()->setFlash('success', "Post {$id} created");
     }
+
     public function setSuccessDeletedFlash(?string $id): void
     {
         session()->setFlash('success', "Post {$id} deleted");
@@ -122,7 +129,7 @@ class PostController extends BaseController
      * @param Post|null $post
      * @return void
      */
-    public function setErrorFlashPost(Post $post=null): void
+    public function setErrorFlashPost(Post $post = null): void
     {
         if ($post === null) {
             session()->setFlash('error', 'Not found ID');
@@ -130,15 +137,15 @@ class PostController extends BaseController
             session()->setFlash('error', $post->listErrors());
         }
     }
+
     /**
      * @param Post|null $post
      * @return void
      */
     public function setErrorFlashMessage($message): void
     {
-            session()->setFlash('error', $message);
+        session()->setFlash('error', $message);
     }
-
 
 
 }

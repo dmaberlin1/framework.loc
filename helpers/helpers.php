@@ -123,28 +123,29 @@ function get_file_ext($file_name): string
 /**
  * @throws RandomException
  */
-function upload_file($file):string|false
+function upload_file($file, $i = false): string|false
 {
-    $file_ext = get_file_ext($file['name']);
+    $file_ext = ($i === false) ? get_file_ext($file['name']) : get_file_ext($file['name'][$i]);
     $dir = '/' . date('Y') . '/' . date('m') . '/' . date('d'); //2025/08/03
     if (!is_dir(UPLOADS . $dir)) {
         if (!mkdir($concurrentDirectory = $concurrentDirectory = UPLOADS . $dir, 0755, true) && !is_dir($concurrentDirectory)) {
-            dd(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            //            dd(sprintf('Directory "%s" was not created', $concurrentDirectory));
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
 
         }
         $letterRand = chr(random_int(97, 122)); // a-z
-        $file_name = md5($file['name'] . time() . $letterRand);
+        $file_name = md5(
+            ($i === false) ? $file['name'] : $file['name'][$i]
+                . time() . $letterRand);
         $file_path = UPLOADS . "{$dir}/{$file_name}.{$file_ext}";
         $file_url = base_url("/uploads{$dir}/{$file_name}.{$file_ext}");
-        if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                return $file_url;
+        if (move_uploaded_file(($i === false) ? $file['tmp_name'] : $file['tmp_name'][$i], $file_path)) {
+            return $file_url;
         } else {
             error_log(
                 "[" . date('Y-m-d H:i:s') . "] Error uploading file" . PHP_EOL,
                 3,
                 ERROR_LOG_FILE);
-            dd( "Error uploading file");
             return false;
         }
     }

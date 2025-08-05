@@ -16,15 +16,16 @@ abstract class Model
     public array $labels = [];
 
     protected array $errors = [];
-    protected array $rules_list = ['required', 'min', 'max', 'email', 'unique', 'ext','size'];
+    protected array $rules_list = ['required', 'min', 'max', 'email', 'unique', 'file', 'ext', 'size'];
     protected array $messages = [
         'required' => ':fieldname: field is required',
         'min' => ':fieldname: field must be a minimum :rulevalue: characters',
         'max' => ':fieldname: field must be a maximum :rulevalue: characters',
         'email' => ':fieldname: field must be email, example: example@example.example',
         'unique' => ':fieldname: is already taken',
-        'ext'=>'File :fieldname: extension does not match. Allowed :rulevalue:',
-        'size'=>'File :fieldname: is too large. Allowed :rulevalue: bytes',
+        'file' => ':fieldname: field is required',
+        'ext' => 'File :fieldname: extension does not match. Allowed :rulevalue:',
+        'size' => 'File :fieldname: is too large. Allowed :rulevalue: bytes',
     ];
 
     public function __construct()
@@ -95,14 +96,21 @@ abstract class Model
         }
     }
 
-    public function validate(): bool
+    public function validate($data=[],$rules=[]): bool
     {
-        foreach ($this->attributes as $fieldName => $fieldValue) {
-            if (isset($this->rules[$fieldName])) {
+             if(!$data){
+                      $data=$this->attributes;
+             }
+             if(!$rules){
+                 $rules=$this->rules;
+             }
+
+        foreach ($data as $fieldName => $fieldValue) {
+            if (isset($rules[$fieldName])) {
                 $this->check([
-                    'fieldName' => $fieldName,
+                    'fieldname' => $fieldName,
                     'value' => $fieldValue,
-                    'rules' => $this->rules[$fieldName]
+                    'rules' => $rules[$fieldName]
                 ]);
             }
         }
@@ -161,15 +169,7 @@ abstract class Model
 
     protected function required($value, $rule_value): bool
     {
-        if(is_string($value)){
-            $value=trim($value);
-        }
-        if(is_array($value)){
-            if(empty($value['name'])){
-                return false;
-            }
-        }
-        return !empty($value);
+        return !empty(trim($value));
     }
 
     protected function min($value, $rule_value): bool
@@ -199,23 +199,65 @@ abstract class Model
         return !$boolResult;
     }
 
-    protected function ext($value,$rule_value):bool
+    protected function file($value, $rule_value)
     {
-        //валидация на это поле проходит в required
-        if(empty($value['name'])){
-            return true;
-        }
+        $value_error = $value['error'];
 
-        $file_ext = get_file_ext($value['name']);
-        $allowed_exts=explode('|',$rule_value);
-        return in_array($file_ext,$allowed_exts);
+        if (isset($value_error) && is_array($value_error)) {
+            foreach ($value_error as $file_error) {
+                if ($file_error !== 0) {
+                    return false;
+                }
+            }
+        } elseif (isset($value_error) && $value_error !== 0) {
+            return false;
+        }
+        return true;
     }
 
-    protected function size($value,$rule_value):bool
+    protected function ext($value, $rule_value): bool
     {
-        if(empty($value['size'])){
+        //        array files
+        if (is_array($value['name'])) {
+            if (empty($value['name'][0])) {
+                return true;
+            }
+            for ($i = 0, $iMax = count($value['name']); $i < $iMax; $i++) {
+                $file_ext = get_file_ext($value['name'][$i]);
+                $allowed_exts = explode('|', $rule_value);
+                if (!in_array($file_ext, $allowed_exts)) {
+                    return false;
+                }
+            }
             return true;
         }
-        return $value['size']<=$rule_value;
+
+        //        one file
+        if (empty($value['name'])) {
+            return true;
+        }
+        $file_ext = get_file_ext($value['name']);
+        $allowed_exts = explode('|', $rule_value);
+        return in_array($file_ext, $allowed_exts);
+    }
+
+    protected function size($value, $rule_value): bool
+    {
+        $value_size = $value['size'];
+        if (is_array($value_size)) {
+            if (empty($value_size[0])) {
+                return true;
+            }
+            for ($i = 0, $iMax = count($value_size); $i < $iMax; $i++) {
+                if ($value_size[$i] > $rule_value) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (empty($value_size)) {
+            return true;
+        }
+        return $value_size <= $rule_value;
     }
 }

@@ -59,9 +59,26 @@ class PostController extends BaseController
 
     public function create()
     {
-        if (request()->isPost()) {
 
-        }
+        //        if (request()->isPost()) {
+        //
+        //        }
+        //        тест производной валидации
+        //        $post = new Post();
+        //        dump($post->validate(
+        //            [
+        //                'name' => 'John',
+        //                'email' => '1@gmail.com',
+        //                'text' => '123'
+        //            ],
+        //            [
+        //                'name' => ['required' => true],
+        //                'email' => ['email' => true],
+        //                'text' => ['min' => 10]
+        //            ]
+        //        ));
+        //        dump($post->getErrors());
+
         $title = 'Create post';
         return view('Posts/create', ['title' => $title]);
     }
@@ -78,12 +95,17 @@ class PostController extends BaseController
             $post->attributes[$thumbnail] = [];
         }
 
+        $thumbnails = 'thumbnails';
+        if (isset($_FILES[$thumbnails])) {
+            $post->attributes[$thumbnails] = $_FILES[$thumbnails];
+        } else {
+            $post->attributes[$thumbnails] = [];
+        }
+
         if (!$post->validate()) {
             $title = 'Create post';
-
             dump($post->getErrors());
             return view('Posts/create', ['title' => $title]);
-
         }
 
         if ($id = $post->savePost()) {

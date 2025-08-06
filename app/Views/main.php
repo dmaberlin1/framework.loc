@@ -5,8 +5,9 @@
     <?php //echo session()->get('name2','Sara'); ?>
 
     <?php if (!empty($posts)): ?>
-        <?php foreach ($posts as $post): ?>
+        <?= $pagination;?>
 
+        <?php foreach ($posts as $post): ?>
             <h3>
                 <a href="posts/<?= $post['slug']?>">
                     <?= $post['title'] ?>
@@ -21,6 +22,6 @@
                 </a>
             </h3>
         <?php endforeach; ?>
-
+        <?= $pagination;?>
     <?php endif; ?>
 </div>

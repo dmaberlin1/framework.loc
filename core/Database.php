@@ -110,6 +110,12 @@ class Database
         return $this->statement->rowCount();
     }
 
+    public function count($table)
+    {
+        $this->query("select count(*) from {$table}");
+        return $this->getColumn();
+    }
+
     public function getQueries(): array
     {
         $res = [];

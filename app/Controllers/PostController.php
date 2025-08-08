@@ -42,7 +42,10 @@ class PostController extends BaseController
         $post = new Post();
         $post->loadData();
         $post->attributes['id'] = $id;
-        if (!$post->validate()) {
+        if (!$post->validate($post->attributes,[
+            'title' => ['required' => true, 'min' => 2, 'max' => 50],
+            'content' => ['required' => true, 'min' => 5, 'max' => 200],
+        ])) {
             dump($post->getErrors());
             $this->setErrorFlashPost($post);
             response()->redirect("/framework.loc/posts/edit?={$id}");
@@ -59,10 +62,6 @@ class PostController extends BaseController
 
     public function create()
     {
-
-        //        if (request()->isPost()) {
-        //
-        //        }
         //        тест производной валидации
         //        $post = new Post();
         //        dump($post->validate(

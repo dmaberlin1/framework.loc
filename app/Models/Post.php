@@ -6,17 +6,16 @@ use PHPFramework\Model;
 
 class Post extends Model
 {
+    protected array $fillable = ['title', 'content', 'slug'];
 
-    public array $fillable = ['title', 'content', 'slug'];
-
-    public array $rules = [
-        'name' => ['required' => true, 'min' => 2, 'max' => 50],
+    protected array $rules = [
+        'title' => ['required' => true, 'min' => 2, 'max' => 50],
         'content' => ['required' => true, 'min' => 5, 'max' => 200],
         'slug' => ['required' => true, 'unique' => 'posts:slug'],
         'thumbnail' => ['ext' => 'jpg|jpeg|png', 'size' => 1_048_576],
         'thumbnails' => ['file' => true, 'ext' => 'jpg|jpeg|png', 'size' => 1_048_576]
     ];
-    public array $labels = [
+    protected array $labels = [
         'title' => 'Post title',
         'content' => 'Content',
         'slug' => 'Slug',

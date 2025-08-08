@@ -12,6 +12,7 @@ const CONFIG=ROOT.'/config';
 const VIEWS=APP.'/Views';
 const LAYOUT ='default';
 const PATH='http://localhost/framework.loc';
+const LOGIN_PAGE=PATH.'/login';
 
 const DB=[
     'host'=>'localhost',

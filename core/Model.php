@@ -5,18 +5,19 @@ namespace PHPFramework;
 abstract class Model
 {
 
-    public readonly string $table;
+    protected readonly string $table;
     //    разрешенные для записи поля
-    public array $fillable = [];
+    protected array $fillable = [];
     //    public array $fillable = ['email', 'content'];
 
     //    поля
     public array $attributes = [];
-    public array $rules = [];
-    public array $labels = [];
+    protected array $rules = [];
+    protected array $labels = [];
+    protected array $data_items=[];
 
     protected array $errors = [];
-    protected array $rules_list = ['required', 'min', 'max', 'email', 'unique', 'file', 'ext', 'size'];
+    protected array $rules_list = ['required', 'min', 'max', 'email', 'unique', 'file', 'ext', 'size','match'];
     protected array $messages = [
         'required' => ':fieldname: field is required',
         'min' => ':fieldname: field must be a minimum :rulevalue: characters',
@@ -26,6 +27,7 @@ abstract class Model
         'file' => ':fieldname: field is required',
         'ext' => 'File :fieldname: extension does not match. Allowed :rulevalue:',
         'size' => 'File :fieldname: is too large. Allowed :rulevalue: bytes',
+        'match' => ':fieldname: field must match with :rulevalue: field',
     ];
 
     public function __construct()
@@ -73,7 +75,7 @@ abstract class Model
         $fields = rtrim($fields, ',');
         $query = "UPDATE {$this->table} SET {$fields} WHERE `id`=:id";
         db()->query($query, $this->attributes);
-        dump($query);
+//        dump($query);
         return db()->rowCount();
 
     }
@@ -105,6 +107,7 @@ abstract class Model
                  $rules=$this->rules;
              }
 
+             $this->data_items=$data;
         foreach ($data as $fieldName => $fieldValue) {
             if (isset($rules[$fieldName])) {
                 $this->check([
@@ -185,6 +188,15 @@ abstract class Model
     protected function email($value, $rule_value): bool
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL);
+    }
+    protected function match($value,$rule_value):bool
+    {
+//        dump($value);
+//        dump($rule_value);
+//        dump($this->data_items);
+
+        return $value===$this->data_items[$rule_value];
+
     }
 
     protected function unique($value, $rule_value): bool

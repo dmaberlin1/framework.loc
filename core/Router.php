@@ -24,15 +24,42 @@ class Router
         return $this->routes;
     }
 
-    public function get($path, $callback): void
+    public function add($path, $callback, $method): self
     {
         $path = trim($path, '/');
-        $this->routes['GET']["/{$path}"] = $callback;
+        if (is_array($method)) {
+            $method = array_map('strtoupper', $method);
+        } else {
+            $method = [strtoupper($method)];
+            //            dd($method);
+        }
+        $this->routes[] = [
+            'path' => "/{$path}",
+            'callback' => $callback,
+            'middleware' => null,
+            'method' => $method,
+        ];
+        //        foreach ($method as $item_method) {
+        //            $this->routes[$item_method]["/{$path}"] = [
+        //                'callback' => $callback,
+        //                'middleware' => null,
+        //            ];
+        //        }
+        //                dump($this->getRoutes());
+        return $this;
     }
 
-    public function post($path, $callback): void
+    public function get($path, $callback)
     {
-        $this->routes['POST'][$path] = $callback;
+        return $this->add($path, $callback, 'GET');
+        //        $path = trim($path, '/');
+        //        $this->routes['GET']["/{$path}"] = $callback;
+    }
+
+    public function post($path, $callback)
+    {
+        return $this->add($path, $callback, 'POST');
+        //        $this->routes['POST'][$path] = $callback;
     }
 
     public function dispatch(): mixed
@@ -40,24 +67,34 @@ class Router
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
         $callback = $this->matchRoute($method, $path);
-//        dd($callback);
+        //        dd($callback);
         if ($callback === false) {
             abort();
         }
 
-        if (is_array($callback)) {
-            $callback[0] = new $callback[0];
+        if (is_array($callback['callback'])) {
+            $callback['callback'][0] = new $callback['callback'][0];
         }
-        //        var_dump($callback);
-        return call_user_func($callback);
+        return call_user_func($callback['callback']);
 
     }
 
     protected function matchRoute($method, $path)
     {
-        foreach ($this->routes[$method] as $pattern => $route) {
-            if (preg_match("#^{$pattern}$#", "/{$path}", $matches)) {
-                //                dump($matches);
+        foreach ($this->routes as $route) {
+            if ((preg_match("#^{$route['path']}$#", "/{$path}", $matches))
+                &&
+                (in_array($this->request->getMethod(), $route['method']))
+            ) {
+                //                dump($route);
+                if ($route['middleware']) {
+                    $middleware = MIDDLEWARE[$route['middleware']] ?? false;
+                    dump($middleware);
+                    //если нет совпадений- пропуск
+                    if($middleware){
+                        (new $middleware)->handle();
+                    }
+                }
                 foreach ($matches as $k => $v) {
                     if (is_string($k)) {
                         $this->route_params[$k] = $v;
@@ -67,6 +104,13 @@ class Router
             }
         }
         return false;
+    }
+
+    public function only($middleware): self
+    {
+        $this->routes[array_key_last($this->routes)]['middleware'] = $middleware;
+        return $this;
+
     }
 
 }

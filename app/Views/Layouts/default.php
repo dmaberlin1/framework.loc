@@ -30,10 +30,36 @@
                 </li>
             </ul>
 
+
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <?php if(check_auth()):?>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="<?= base_url('/register') ?>">
+                            Hello, <span style="font-weight: bold"> <?= session()->get('user')['name']?> </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('/logout') ?>">Logout</a>
+                    </li>
+
+                <?php  else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="<?= base_url('/register') ?>">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('/login') ?>">Login</a>
+                    </li>
+                <?php  endif ?>
+
+
+            </ul>
+
         </div>
     </div>
 </nav>
 
+<?php dump(session()->get('user')); ?>
 <?php get_alerts(); ?>
 
 <?= $this->content; ?>

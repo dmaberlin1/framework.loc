@@ -9,7 +9,7 @@ class Session
         session_start();
     }
 
-    public function setFlash($key,$value)
+    public function setFlash($key,$value):void
     {
         //        $_SESSION["flash.{$key}"];
         $_SESSION['flash'][$key]=$value;
@@ -23,7 +23,7 @@ class Session
         return $value ?? null;
     }
 
-    public function set($key, $value)
+    public function set($key, $value):void
     {
         $_SESSION[$key] = $value;
     }
@@ -33,7 +33,12 @@ class Session
         return $_SESSION[$key]?? $default;
     }
 
-    public function forget($key)
+    public function has($key): bool
+    {
+        return isset($_SESSION[$key]);
+    }
+
+    public function forget($key):void
     {
         if(isset($_SESSION[$key])){
             unset($_SESSION[$key]);

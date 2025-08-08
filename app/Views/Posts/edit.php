@@ -13,6 +13,15 @@
                            placeholder="title"
                     >
                 </div>
+                <div class="mb-3">
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" name="slug"
+                           class="form-control" id="slug"
+                           value="<?= h($post['slug']) ?>"
+                           placeholder="slug"
+                    >
+                </div>
+
 
                 <div class="mb-3">
                     <label for="content" class="form-label">content</label>

@@ -10,7 +10,7 @@ class Response
         http_response_code($code);
     }
 
-    public function redirect($url='')
+    public function redirect($url=''):void
     {
         if($url){
             $redirect=$url;

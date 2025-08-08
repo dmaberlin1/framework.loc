@@ -84,7 +84,6 @@ function abort($error = '', $code = 404)
     responseCode($code);
     $notFound = 404;
     if (DEBUG || $code == $notFound) {
-        dump(view("Errors/{$code}", ['error' => $error], false));
         dump("error: ", $error);
         echo view("Errors/{$code}", ['error' => $error], false);
     }
@@ -148,5 +147,18 @@ function upload_file($file, $i = false): string|false
                 ERROR_LOG_FILE);
             return false;
         }
+    }
+    return false;
+}
+
+function check_auth()
+{
+    return session()->has('user');
+}
+
+function logoutFromSession()
+{
+    if(check_auth()) {
+        session()->forget('user');
     }
 }

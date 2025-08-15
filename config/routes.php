@@ -48,5 +48,6 @@ router()->get('/posts/(?P<slug>[a-z0-9-]+)', [PostController::class, 'show']);
 //router()->post('/register',[UserController::class,'register']);
 router()->add('/register', [UserController::class, 'register'], ['get', 'post'])->only('guest');
 //router()->add('/register',[UserController::class,'register'],'post');
-router()->add('/login', [UserController::class, 'login'], ['get', 'post'])->only('guest');
+router()->add('/login', [UserController::class, 'login'], ['get', 'post']);
+//    ->only('guest');
 router()->add('/logout', [UserController::class, 'logout'], ['get'])->only('auth');

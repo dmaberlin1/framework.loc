@@ -5,6 +5,9 @@ use PHPFramework\Application;
 use PHPFramework\Router;
 use PHPFramework\Session;
 use PHPFramework\View;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 use Random\RandomException;
 
 function app(): Application
@@ -122,7 +125,7 @@ function get_file_ext($file_name): string
 /**
  * @throws RandomException
  */
-function upload_file($file, $i = false): string|false
+function upload_file($file, $i = false,$path=false): string|false
 {
     $file_ext = ($i === false) ? get_file_ext($file['name']) : get_file_ext($file['name'][$i]);
     $dir = '/' . date('Y') . '/' . date('m') . '/' . date('d'); //2025/08/03
@@ -139,6 +142,10 @@ function upload_file($file, $i = false): string|false
         $file_path = UPLOADS . "{$dir}/{$file_name}.{$file_ext}";
         $file_url = base_url("/uploads{$dir}/{$file_name}.{$file_ext}");
         if (move_uploaded_file(($i === false) ? $file['tmp_name'] : $file['tmp_name'][$i], $file_path)) {
+            if ($path){
+                return $file_path;
+            }
+
             return $file_url;
         } else {
             error_log(
@@ -156,9 +163,68 @@ function check_auth()
     return session()->has('user');
 }
 
-function logoutFromSession()
+function logout_from_session()
 {
-    if(check_auth()) {
+    if (check_auth()) {
         session()->forget('user');
     }
+}
+
+function cache(): \PHPFramework\Cache
+{
+    return app()->cache;
+}
+
+function send_mail(array $to, string $subject, string $body, array $attachments = []): bool
+{
+    $mail = new PHPMailer(true);
+    try {
+        //Server settings
+        $mail->SMTPDebug = EMAIL['debug'];                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host = EMAIL['host'];                     //Set the SMTP server to send through
+        $mail->SMTPAuth = EMAIL['auth'];                                   //Enable SMTP authentication
+        $mail->Username = EMAIL['username'];                 //SMTP username
+        $mail->Password = EMAIL['password'];                               //SMTP password
+        $mail->SMTPSecure = EMAIL['secure'];            //Enable implicit TLS encryption
+        $mail->Port = EMAIL['port'];                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        //Recipients
+        $mail->setFrom(EMAIL['from_email']);
+
+        foreach ($to as $email) {
+            $mail->addAddress($email);     //Add a recipient
+
+        }
+        //        $mail->addAddress(EMAIL['add_address']);     //Add a recipient
+        //            $mail->addAddress('ellen@example.com');               //Name is optional
+        //            $mail->addReplyTo('info@example.com', 'Information');
+        //            $mail->addCC('cc@example.com');
+        //            $mail->addBCC('bcc@example.com');
+
+        //Attachments
+        if ($attachments) {
+            foreach ($attachments as $attachment) {
+                $mail->addAttachment($attachment);         //Add attachments
+
+            }
+        }
+        //        $mail->addAttachment(UPLOADS.'/2025/08/05/1aab10c61db9390f1687a482bf77334c.jpg');         //Add attachments
+        //            $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
+        //Content
+        $mail->isHTML(EMAIL['is_html']);                                  //Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        $mail->CharSet = EMAIL['charset'];
+        return $mail->send();
+        //            echo 'Message has been sent';
+    } catch (Exception $e) {
+        error_log(
+            "[" . date('Y-m-d H:i:s') . "] DB Error: {$e->getMessage()}" . PHP_EOL,
+            3,
+            ERROR_LOG_FILE);
+        return false;
+    }
+
 }

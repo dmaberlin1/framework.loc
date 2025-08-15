@@ -59,6 +59,10 @@
     </div>
 </nav>
 
+<?php
+dump(app()->get('users')[0]);
+?>
+
 <?php dump(session()->get('user')); ?>
 <?php get_alerts(); ?>
 

@@ -20,6 +20,7 @@ class ComposerStaticInit1f8d3463171939106ff2240b835bba54
         ),
         'P' => 
         array (
+            'PHPMailer\\PHPMailer\\' => 20,
             'PHPFramework\\' => 13,
         ),
         'A' => 
@@ -36,6 +37,10 @@ class ComposerStaticInit1f8d3463171939106ff2240b835bba54
         'Symfony\\Component\\VarDumper\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'PHPFramework\\' => 
         array (

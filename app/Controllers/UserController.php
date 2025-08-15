@@ -63,7 +63,7 @@ class UserController extends BaseController
 
     public function logout()
     {
-        logoutFromSession();
+        logout_from_session();
         response()->redirect('/framework.loc/login');
 
     }

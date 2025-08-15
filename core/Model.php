@@ -204,6 +204,14 @@ abstract class Model
         $data = explode(':', $rule_value);
         $table = $data[0];
         $field = $data[1];
+        if(str_contains($data[1],',')){
+            $data_fields=explode(',',$field);
+            $currentId = $this->data_items[$data_fields[1]];
+            $result = db()->findUniqueWithExclude($table, $data_fields, $value, $currentId);
+            $boolResult = is_array($result);
+            //        dd(!$boolResult);
+            return !$boolResult;
+        }
 
         $result = db()->findUnique($table, $field, $value);
         $boolResult = is_array($result);

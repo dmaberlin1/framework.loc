@@ -53,6 +53,7 @@ class Database
     {
         return $this->statement->fetchAll();
     }
+
     public function getOne(): array|false
     {
         return $this->statement->fetch();
@@ -60,15 +61,11 @@ class Database
 
     public function findPostBySlug($slug)
     {
-       return db()->query("SELECT * FROM posts WHERE slug =?",[$slug])->getOne();
+        return db()->query("SELECT * FROM posts WHERE slug =?", [$slug])->getOne();
     }
 
     public function findAll($table): array|false
     {
-        $tableList = ["posts"];
-        if (!in_array($table, $tableList, true)) {
-            abort("Таблица '{$table}' не разрешена для выборки.", 403);
-        }
         $this->query("SELECT * FROM {$table}");
         return $this->statement->fetchAll();
     }
@@ -79,17 +76,29 @@ class Database
         return $this->statement->fetch();
     }
 
-    public function getColumn():mixed
+    public function getColumn(): mixed
     {
         return $this->statement->fetchColumn();
     }
 
-    public function findUnique($table,$field,$value)
+    public function findUnique($table, $field, $value)
     {
         $this->query("select * from {$table} where {$field} = ? limit 1", [$value]);
         return $this->statement->fetch();
 
     }
+
+    public function findUniqueWithExclude($table, $data_fields, $value, $currentId)
+    {
+        //       при апдейте проверяет по всем записям кроме текущего ( которое указано в поле currentId)
+        $this->query("select {$data_fields[0]}
+                            from {$table}
+                            where {$data_fields[0]} = ? 
+                            AND {$data_fields[1]} !=? limit 1", [$value, $currentId]);
+        return $this->statement->fetch();
+
+    }
+
     public function findByIdOrFail($table, $id)
     {
         $result = $this->findById($table, $id);
@@ -124,10 +133,10 @@ class Database
             //            PHP_EOL = маркер конца строки в зависимости от ОСи
             $line = strtok($query, PHP_EOL);
             while ($line !== false) {
-                if(str_contains($line,'SQL:') || str_contains($line,'Sent SQL:')) {
-                    $res[$k][]=$line;
+                if (str_contains($line, 'SQL:') || str_contains($line, 'Sent SQL:')) {
+                    $res[$k][] = $line;
                 }
-                $line=strtok(PHP_EOL);
+                $line = strtok(PHP_EOL);
             }
         }
 

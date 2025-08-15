@@ -45,6 +45,7 @@ class PostController extends BaseController
         if (!$post->validate($post->attributes,[
             'title' => ['required' => true, 'min' => 2, 'max' => 50],
             'content' => ['required' => true, 'min' => 5, 'max' => 200],
+            'slug' => ['required' => true,'unique'=>'posts:slug,id'],
         ])) {
             dump($post->getErrors());
             $this->setErrorFlashPost($post);

@@ -12,26 +12,40 @@ class Application
     public View $view;
     public Database $db;
     public Session $session;
+    public Cache $cache;
     public static Application $app;
+    protected array $container = [];
 
     public function __construct()
     {
-//             dump($_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI'],$_GET);
-        self::$app=$this;
+        //             dump($_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI'],$_GET);
+        self::$app = $this;
         $this->uri = ltrim($_SERVER['QUERY_STRING'], 'q=');
 
         $this->request = new Request($this->uri);
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
-        $this->view=new View(LAYOUT);
-        $this->db=new Database();
+        $this->view = new View(LAYOUT);
+        $this->db = new Database();
         $this->session = new Session();
+        $this->cache = new Cache();
 
     }
 
-    public function run():void
+    public function run(): void
     {
-       echo $this->router->dispatch();
+        echo $this->router->dispatch();
+    }
+
+    public function get($key, $default = null)
+    {
+        return $this->container[$key] ?? $default;
+
+    }
+
+    public function set($key,$value):void
+    {
+        $this->container[$key]=$value;
     }
 
 }
